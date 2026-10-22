@@ -1,0 +1,24 @@
+# Dependencies & build output
+node_modules/
+dist/
+.angular/
+/tmp
+/out-tsc
+/coverage
+
+# Secrets — plaintext demo credentials (never commit)
+CREDENTIALS.md
+
+# Logs
+npm-debug.log*
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.sublime-workspace
+
+# System files
+.DS_Store
+Thumbs.db

@@ -1,0 +1,49 @@
+<div class="bento">
+  <!-- Gauge hero -->
+  <app-panel class="span-5" title="Field gateway" subtitle="Solar-powered sensor hub · latest reading" [status]="state().status" [error]="state().error" skeletonHeight="230px" (retry)="refresh.set(refresh() + 1)">
+    @if (now(); as n) {
+      <div class="grid grid-cols-2 gap-4 items-center">
+        <figure class="m-0 flex flex-col items-center gap-2">
+          <p-knob [ngModel]="n.battery" [min]="0" [max]="100" [readonly]="true" [size]="150" [strokeWidth]="12" valueTemplate="{value}%" [valueColor]="batteryColor()" ariaLabel="Battery level" />
+          <figcaption class="text-sm font-medium">Battery</figcaption>
+        </figure>
+        <figure class="m-0 flex flex-col items-center gap-2">
+          <p-knob [ngModel]="n.lightIntensity" [min]="0" [max]="1100" [readonly]="true" [size]="150" [strokeWidth]="12" valueTemplate="{value}" valueColor="var(--amber)" ariaLabel="Solar irradiance in watts per square metre" />
+          <figcaption class="text-sm font-medium">Irradiance <span class="muted text-xs">W/m²</span></figcaption>
+        </figure>
+      </div>
+    }
+  </app-panel>
+
+  <div class="span-7 grid gap-5 sm:grid-cols-3">
+    <app-kpi-tile label="Sun hours · 24 h" icon="pi-sun" tone="amber" unit="h" [value]="kpi()?.solarHours ?? null" hint="Irradiance above 200 W/m²" [loading]="loading()" />
+    <app-kpi-tile label="Battery floor" icon="pi-bolt" unit="%" [value]="kpi()?.minBattery ?? null" hint="Overnight discharge floor" [loading]="loading()" />
+    <app-kpi-tile label="Peak enclosure" icon="pi-exclamation-triangle" tone="amber" unit="°C" [value]="kpi()?.peakTemp ?? null" hint="Alert threshold 45 °C" [loading]="loading()" />
+  </div>
+
+  <app-panel
+    class="span-12"
+    title="Solar charging cycle"
+    subtitle="Irradiance against battery state of charge, hourly over 7 days"
+    [status]="state().status"
+    [error]="state().error"
+    skeletonHeight="280px"
+    (retry)="refresh.set(refresh() + 1)"
+  >
+    <div class="h-[280px]">
+      <p-chart type="line" [data]="solar()" [options]="solarOptions()" height="280px" ariaLabel="Irradiance and battery level over 7 days" />
+    </div>
+  </app-panel>
+
+  <app-panel class="span-7" title="Enclosure temperature" [status]="state().status" [error]="state().error" skeletonHeight="220px" (retry)="refresh.set(refresh() + 1)">
+    <div class="h-[240px]">
+      <p-chart type="line" [data]="temp()" [options]="tempOptions()" height="240px" ariaLabel="Enclosure temperature over 7 days" />
+    </div>
+  </app-panel>
+
+  <app-panel class="span-5" title="Soil conductivity" subtitle="Daily mean, µS/cm" [status]="state().status" [error]="state().error" skeletonHeight="220px" (retry)="refresh.set(refresh() + 1)">
+    <div class="h-[240px]">
+      <p-chart type="bar" [data]="ec()" [options]="ecOptions()" height="240px" ariaLabel="Daily mean soil conductivity" />
+    </div>
+  </app-panel>
+</div>

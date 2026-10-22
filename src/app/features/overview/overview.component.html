@@ -1,0 +1,111 @@
+<div class="bento">
+  <!-- KPI strip (4 tiles) -->
+  <app-kpi-tile
+    class="span-3"
+    label="Soil moisture"
+    icon="pi-chart-line"
+    unit="% VWC"
+    [value]="kpi()?.moisture ?? null"
+    [delta]="kpi()?.moistureDelta ?? null"
+    [loading]="loading()"
+  />
+  <app-kpi-tile
+    class="span-3"
+    label="Water applied · 24 h"
+    icon="pi-cloud"
+    unit="m³"
+    [value]="kpi()?.water ?? null"
+    [delta]="kpi()?.waterDelta ?? null"
+    [invertDelta]="true"
+    [loading]="loading()"
+  />
+  <app-kpi-tile
+    class="span-3"
+    label="Gateway battery"
+    icon="pi-bolt"
+    tone="amber"
+    unit="%"
+    [value]="kpi()?.battery ?? null"
+    hint="Solar-charged field gateway"
+    [loading]="loading()"
+  />
+  <app-kpi-tile
+    class="span-3"
+    label="Open alerts"
+    icon="pi-bell"
+    tone="amber"
+    [value]="kpi()?.openAlerts ?? null"
+    [hint]="(kpi()?.critical ?? 0) + ' critical on this field'"
+    [loading]="loading()"
+  />
+
+  <!-- Primary: 7-day trend -->
+  <app-panel
+    class="span-8"
+    title="Root zone vs. air — last 7 days"
+    [subtitle]="field() ? field()!.name + ' · ' + field()!.crop + ' · 7-day mean ' + avgMoisture7d() + ' %' : ''"
+    [status]="state().status"
+    [error]="state().error"
+    skeletonHeight="300px"
+    (retry)="refresh.set(refresh() + 1)"
+  >
+    <a panel-actions routerLink="/app/irrigation" class="text-xs font-semibold text-[var(--accent)] no-underline hover:underline">
+      Irrigation detail <i class="pi pi-arrow-right text-[10px]" aria-hidden="true"></i>
+    </a>
+    <div class="h-[300px]">
+      <p-chart type="line" [data]="trend()" [options]="trendOptions()" height="300px" ariaLabel="Soil moisture and air humidity over the last 7 days" />
+    </div>
+  </app-panel>
+
+  <!-- Secondary: controls -->
+  <app-device-controls class="span-4" title="Field devices" />
+
+  <!-- Gauges -->
+  <app-panel class="span-5" title="Conditions right now" subtitle="Latest hourly reading" [status]="state().status" [error]="state().error" skeletonHeight="140px" (retry)="refresh.set(refresh() + 1)">
+    @if (gauges(); as g) {
+      <div class="grid grid-cols-3 gap-2 text-center">
+        <figure class="m-0 flex flex-col items-center gap-1">
+          <p-knob [ngModel]="g.ph" [min]="4" [max]="9" [step]="0.01" [readonly]="true" [size]="104" [strokeWidth]="10" valueTemplate="{value}" ariaLabel="Soil pH" />
+          <figcaption class="text-xs muted">Soil pH <span class="block text-[11px]">target 6.0 – 6.8</span></figcaption>
+        </figure>
+        <figure class="m-0 flex flex-col items-center gap-1">
+          <p-knob [ngModel]="g.humidity" [min]="0" [max]="100" [readonly]="true" [size]="104" [strokeWidth]="10" valueTemplate="{value}%" valueColor="var(--chart-3)" ariaLabel="Air humidity" />
+          <figcaption class="text-xs muted">Air humidity <span class="block text-[11px]">relative</span></figcaption>
+        </figure>
+        <figure class="m-0 flex flex-col items-center gap-1">
+          <p-knob [ngModel]="g.ec" [min]="0" [max]="800" [readonly]="true" [size]="104" [strokeWidth]="10" valueTemplate="{value}" valueColor="var(--amber)" ariaLabel="Soil conductivity" />
+          <figcaption class="text-xs muted">Conductivity <span class="block text-[11px]">µS/cm</span></figcaption>
+        </figure>
+      </div>
+    }
+  </app-panel>
+
+  <!-- Alerts feed -->
+  <app-panel
+    class="span-7"
+    title="Latest alerts"
+    subtitle="This field, newest first"
+    [status]="state().status === 'ok' && !recentAlerts().length ? 'empty' : state().status"
+    [error]="state().error"
+    emptyText="No alerts for this field. All quiet."
+    [flush]="true"
+    skeletonHeight="160px"
+    (retry)="refresh.set(refresh() + 1)"
+  >
+    <a panel-actions routerLink="/app/alerts" class="text-xs font-semibold text-[var(--accent)] no-underline hover:underline">
+      All alerts <i class="pi pi-arrow-right text-[10px]" aria-hidden="true"></i>
+    </a>
+    <ul class="list-none m-0 p-0 divide-y divide-[var(--border)]">
+      @for (a of recentAlerts(); track a.id) {
+        <li class="flex items-start gap-3 px-5 py-3">
+          <app-severity-tag [severity]="a.severity" />
+          <div class="min-w-0 flex-1">
+            <p class="m-0 text-sm font-semibold" [class.muted]="a.acknowledged">{{ a.title }}</p>
+            <p class="m-0 text-xs muted truncate">{{ a.message }}</p>
+          </div>
+          <time class="text-xs muted whitespace-nowrap" [attr.datetime]="a.raisedAt" [title]="full(a.raisedAt)">{{ rel(a.raisedAt) }}</time>
+        </li>
+      }
+    </ul>
+  </app-panel>
+</div>

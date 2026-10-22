@@ -1,0 +1,63 @@
+<div class="bento">
+  <app-kpi-tile
+    class="span-3"
+    label="Soil pH"
+    icon="pi-gauge"
+    [unit]="kpi() ? (kpi()!.inBand ? 'in target band' : 'outside 6.0 – 6.8') : ''"
+    [value]="kpi()?.ph ?? null"
+    [delta]="kpi()?.phDelta ?? null"
+    [loading]="loading()"
+  />
+  <app-kpi-tile
+    class="span-3"
+    label="Moisture at 30 cm"
+    icon="pi-chart-line"
+    unit="% VWC"
+    [value]="kpi()?.moisture ?? null"
+    [delta]="kpi()?.moistureDelta ?? null"
+    [loading]="loading()"
+  />
+  <app-kpi-tile class="span-3" label="Canopy humidity" icon="pi-cloud" unit="%" [value]="kpi()?.humidity ?? null" hint="Probe at 1.2 m" [loading]="loading()" />
+  <app-kpi-tile class="span-3" label="Dosing · 7 days" icon="pi-sparkles" tone="amber" unit="h" [value]="kpi()?.dosingHours ?? null" hint="Doser runtime" [loading]="loading()" />
+
+  <app-panel
+    class="span-8"
+    title="pH against the target band"
+    subtitle="Hourly readings; dashed lines mark the agronomic target"
+    [status]="state().status"
+    [error]="state().error"
+    skeletonHeight="300px"
+    (retry)="refresh.set(refresh() + 1)"
+  >
+    <div class="h-[300px]">
+      <p-chart type="line" [data]="phChart()" [options]="phOptions()" height="300px" ariaLabel="Soil pH over 7 days with target band" />
+    </div>
+  </app-panel>
+
+  <app-device-controls class="span-4" kind="doser" title="Doser control" />
+
+  <app-panel
+    class="span-12"
+    title="Doser activity — hour by day"
+    subtitle="Filled cells: doser running · amber underline: pH outside the target band"
+    [status]="state().status"
+    [error]="state().error"
+    skeletonHeight="200px"
+    (retry)="refresh.set(refresh() + 1)"
+  >
+    <div class="overflow-x-auto">
+      <div class="heat" role="table" aria-label="Doser activity by day and hour">
+        <span role="columnheader"></span>
+        @for (h of hours; track h) {
+          <span role="columnheader" class="text-[10px] muted text-center num">{{ h % 3 === 0 ? (h < 10 ? '0' + h : h) : '' }}</span>
+        }
+        @for (row of heat(); track row.label) {
+          <span role="rowheader" class="text-xs muted self-center">{{ row.label }}</span>
+          @for (c of row.cells; track $index) {
+            <span role="cell" class="cell" [class.on]="c?.on" [class.off-band]="offBand(c)" [title]="cellTitle(c)"></span>
+          }
+        }
+      </div>
+    </div>
+  </app-panel>
+</div>

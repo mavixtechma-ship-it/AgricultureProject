@@ -1,0 +1,96 @@
+<div class="bento">
+  <app-kpi-tile
+    class="span-3"
+    label="Flow rate now"
+    icon="pi-sync"
+    unit="L/min"
+    [value]="kpi()?.flow ?? null"
+    [hint]="kpi()?.pumpOn ? 'Pump running' : 'Pump idle'"
+    [loading]="loading()"
+  />
+  <app-kpi-tile class="span-3" label="Rainfall · 7 days" icon="pi-cloud" unit="mm" [value]="kpi()?.rain7d ?? null" hint="Tipping-bucket gauge" [loading]="loading()" />
+  <app-kpi-tile
+    class="span-3"
+    label="Soil moisture · 24 h mean"
+    icon="pi-chart-line"
+    unit="% VWC"
+    [value]="kpi()?.moisture24h ?? null"
+    [delta]="kpi()?.moistureDelta ?? null"
+    [loading]="loading()"
+  />
+  <app-kpi-tile
+    class="span-3"
+    label="Air temperature"
+    icon="pi-sun"
+    tone="amber"
+    unit="°C"
+    [value]="kpi()?.temp ?? null"
+    [delta]="kpi()?.tempDelta ?? null"
+    [invertDelta]="true"
+    [loading]="loading()"
+  />
+
+  <app-panel
+    class="span-8"
+    title="How the root zone responds to irrigation"
+    subtitle="Soil moisture (line) against pump flow (bars), hourly"
+    [status]="state().status"
+    [error]="state().error"
+    skeletonHeight="300px"
+    (retry)="refresh.set(refresh() + 1)"
+  >
+    <div class="h-[300px]">
+      <p-chart type="bar" [data]="response()" [options]="responseOptions()" height="300px" ariaLabel="Soil moisture and pump flow over 7 days" />
+    </div>
+  </app-panel>
+
+  <app-device-controls class="span-4" kind="pump" title="Pump control" />
+
+  <app-panel
+    class="span-5"
+    title="Daily rainfall"
+    [status]="state().status"
+    [error]="state().error"
+    skeletonHeight="220px"
+    (retry)="refresh.set(refresh() + 1)"
+  >
+    <div class="h-[240px]">
+      <p-chart type="bar" [data]="rain()" [options]="rainOptions()" height="240px" ariaLabel="Daily rainfall" />
+    </div>
+  </app-panel>
+
+  <app-panel
+    class="span-7"
+    title="Irrigation log"
+    subtitle="Most recent pump runs"
+    [status]="state().status === 'ok' && !runs().length ? 'empty' : state().status"
+    [error]="state().error"
+    emptyText="The pump has not run in the last 7 days."
+    [flush]="true"
+    skeletonHeight="200px"
+    (retry)="refresh.set(refresh() + 1)"
+  >
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="text-left text-xs muted">
+            <th scope="col" class="font-medium px-5 py-2">Started</th>
+            <th scope="col" class="font-medium px-5 py-2 text-right">Duration</th>
+            <th scope="col" class="font-medium px-5 py-2 text-right">Avg flow</th>
+            <th scope="col" class="font-medium px-5 py-2 text-right">Volume</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (r of runs(); track r.start) {
+            <tr class="border-t border-[var(--border)]">
+              <td class="px-5 py-2.5" [title]="full(r.start)">{{ dayHour(r.start) }}</td>
+              <td class="px-5 py-2.5 text-right num">{{ r.hours }} h</td>
+              <td class="px-5 py-2.5 text-right num">{{ r.avgFlow }} L/min</td>
+              <td class="px-5 py-2.5 text-right num font-semibold">{{ r.litres.toLocaleString() }} L</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </app-panel>
+</div>

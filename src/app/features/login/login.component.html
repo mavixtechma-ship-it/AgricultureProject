@@ -1,0 +1,97 @@
+<div class="min-h-screen grid lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
+  <!-- Brand side -->
+  <aside class="relative hidden lg:flex flex-col justify-between overflow-hidden bg-ink-950 p-12 text-white">
+    <div class="pointer-events-none absolute inset-0 opacity-[0.35] [background-image:linear-gradient(rgb(83_245_220/0.09)_1px,transparent_1px),linear-gradient(90deg,rgb(83_245_220/0.09)_1px,transparent_1px)] [background-size:44px_44px]"></div>
+    <div class="pointer-events-none absolute -bottom-40 -left-24 h-[480px] w-[480px] rounded-full bg-brand-500/20 blur-3xl"></div>
+    <div class="pointer-events-none absolute -top-24 right-0 h-72 w-72 rounded-full bg-amber-400/10 blur-3xl"></div>
+
+    <a routerLink="/" class="relative no-underline" aria-label="AgriSense home"><app-logo [inverse]="true" /></a>
+
+    <div class="relative max-w-md">
+      <p class="eyebrow !text-brand-300 mb-4">Grower console</p>
+      <h1 class="m-0 text-4xl font-[720] leading-[1.1] tracking-tight">Every probe, pump and doser — one sign-in away.</h1>
+      <ul class="mt-8 flex flex-col gap-4 list-none p-0">
+        <li class="flex items-center gap-3 text-ink-200">
+          <span class="grid h-9 w-9 place-items-center rounded-lg bg-white/5 text-brand-300"><i class="pi pi-chart-line" aria-hidden="true"></i></span>
+          Hourly soil, water, energy and nutrient readings
+        </li>
+        <li class="flex items-center gap-3 text-ink-200">
+          <span class="grid h-9 w-9 place-items-center rounded-lg bg-white/5 text-amber-300"><i class="pi pi-bell" aria-hidden="true"></i></span>
+          Threshold alerts with acknowledgement trail
+        </li>
+        <li class="flex items-center gap-3 text-ink-200">
+          <span class="grid h-9 w-9 place-items-center rounded-lg bg-white/5 text-brand-300"><i class="pi pi-shield" aria-hidden="true"></i></span>
+          Role-based control: admins act, viewers observe
+        </li>
+      </ul>
+    </div>
+
+    <p class="relative m-0 text-xs text-ink-400">Portfolio demo · all readings are simulated</p>
+  </aside>
+
+  <!-- Form side -->
+  <main class="relative flex flex-col bg-[var(--bg)]">
+    <div class="flex items-center justify-between px-6 py-5 sm:px-10">
+      <a routerLink="/" class="lg:invisible no-underline text-[var(--text)]" aria-label="AgriSense home"><app-logo /></a>
+      <div class="flex items-center gap-2">
+        <a routerLink="/" class="text-sm muted no-underline hover:text-[var(--accent)]"><i class="pi pi-arrow-left text-xs" aria-hidden="true"></i> Back to site</a>
+        <button
+          type="button"
+          class="ms-2 grid h-9 w-9 place-items-center rounded-lg border border-[var(--border)] bg-[var(--surface)] text-[var(--text)] cursor-pointer"
+          (click)="theme.toggle()"
+          [attr.aria-label]="theme.dark() ? 'Switch to light mode' : 'Switch to dark mode'"
+        >
+          <i class="pi" [class]="theme.dark() ? 'pi-sun' : 'pi-moon'" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex flex-1 items-center justify-center px-6 pb-16 sm:px-10">
+      <div class="w-full max-w-[400px]">
+        <h2 class="m-0 text-[28px] font-[700] tracking-tight">Sign in</h2>
+        <p class="mt-2 mb-8 muted">Use the account issued by your farm administrator.</p>
+
+        <form [formGroup]="form" (ngSubmit)="submit()" novalidate class="flex flex-col gap-5" autocomplete="on">
+          <div class="flex flex-col gap-2">
+            <label for="username" class="text-sm font-medium">Username</label>
+            <input
+              pInputText
+              id="username"
+              formControlName="username"
+              autocomplete="username"
+              autocapitalize="none"
+              spellcheck="false"
+              maxlength="32"
+              placeholder="e.g. admin"
+              [class.ng-dirty]="form.controls.username.touched"
+            />
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="password" class="text-sm font-medium">Password</label>
+            <p-password
+              inputId="password"
+              formControlName="password"
+              [feedback]="false"
+              [toggleMask]="true"
+              autocomplete="current-password"
+              [maxLength]="128"
+              styleClass="w-full"
+              inputStyleClass="w-full"
+            />
+          </div>
+
+          @if (error()) {
+            <p-message severity="error" icon="pi pi-exclamation-circle" [text]="error()!" styleClass="w-full" role="alert" />
+          }
+
+          <p-button type="submit" label="Sign in" icon="pi pi-arrow-right" iconPos="right" [loading]="busy()" styleClass="w-full" size="large" />
+        </form>
+
+        <div class="mt-8 rounded-xl border border-dashed border-[var(--border)] p-4 text-sm muted flex gap-3">
+          <i class="pi pi-info-circle mt-0.5 text-[var(--accent)]" aria-hidden="true"></i>
+          <span>No self-registration. Need access? <b class="text-[var(--text)]">Contact your farm administrator</b> — accounts are created centrally as <em>admin</em> (full control) or <em>viewer</em> (read-only).</span>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,247 @@
+<!-- ===== Header ===== -->
+<header class="site-header">
+  <div class="wrap flex h-16 items-center gap-6">
+    <a routerLink="/" class="no-underline text-white" aria-label="AgriSense home"><app-logo [inverse]="true" /></a>
+    <nav class="hidden md:flex items-center gap-1 ms-4" aria-label="Sections">
+      @for (l of links; track l.fragment) {
+        <a routerLink="/" [fragment]="l.fragment" class="hdr-link">{{ l.label }}</a>
+      }
+    </nav>
+    <div class="ms-auto flex items-center gap-2">
+      <button
+        type="button"
+        class="hdr-icon"
+        (click)="theme.toggle()"
+        [attr.aria-label]="theme.dark() ? 'Switch to light mode' : 'Switch to dark mode'"
+      >
+        <i class="pi" [class]="theme.dark() ? 'pi-sun' : 'pi-moon'" aria-hidden="true"></i>
+      </button>
+      <a routerLink="/login" class="hidden sm:inline-flex hdr-cta">Sign in <i class="pi pi-arrow-right text-xs" aria-hidden="true"></i></a>
+      <button type="button" class="hdr-icon hdr-menu" (click)="toggleMenu()" [attr.aria-expanded]="menuOpen()" aria-controls="mobile-menu" aria-label="Menu">
+        <i class="pi" [class]="menuOpen() ? 'pi-times' : 'pi-bars'" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+  @if (menuOpen()) {
+    <nav id="mobile-menu" class="md:hidden wrap flex flex-col pb-4" aria-label="Sections">
+      @for (l of links; track l.fragment) {
+        <a routerLink="/" [fragment]="l.fragment" class="hdr-link py-3" (click)="menuOpen.set(false)">{{ l.label }}</a>
+      }
+      <a routerLink="/login" class="hdr-link py-3 !text-brand-300">Sign in</a>
+    </nav>
+  }
+</header>
+
+<main>
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="hero-glow" aria-hidden="true"></div>
+    <div class="wrap relative grid items-center gap-14 py-20 lg:grid-cols-[1.05fr_1fr] lg:py-28">
+      <div>
+        <p class="pill"><span class="pill-dot" aria-hidden="true"></span> Smart-farm monitoring console</p>
+        <h1 class="mt-6 mb-0 text-[40px] sm:text-[56px] font-[740] leading-[1.03] tracking-[-0.03em] text-white">
+          Know what every field needs <span class="text-brand-300">— hour by hour.</span>
+        </h1>
+        <p class="mt-6 max-w-xl text-lg leading-relaxed text-ink-300">
+          AgriSense brings soil moisture, irrigation, solar power and nutrient sensors into one calm view, raises an alert
+          the moment something drifts, and lets you switch pumps and dosers from anywhere.
+        </p>
+        <div class="mt-9 flex flex-wrap gap-3">
+          <a routerLink="/login" class="btn-primary">Open the live demo <i class="pi pi-arrow-right text-sm" aria-hidden="true"></i></a>
+          <a routerLink="/" fragment="how" class="btn-ghost">See how it works</a>
+        </div>
+        <p class="mt-6 text-sm text-ink-400"><i class="pi pi-lock text-xs" aria-hidden="true"></i> Demo accounts are issued by the administrator.</p>
+      </div>
+
+      <!-- Product preview (static illustration built from markup) -->
+      <div class="preview" aria-label="Illustration of the AgriSense console" role="img">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="m-0 text-xs text-ink-400">Northfield Estate</p>
+            <p class="m-0 text-base font-semibold text-white">North Orchard · Citrus</p>
+          </div>
+          <span class="live"><span class="live-dot"></span>Live</span>
+        </div>
+        <div class="mt-5 grid grid-cols-3 gap-3">
+          <div class="mini">
+            <span class="mini-label">Soil moisture</span>
+            <span class="mini-value">41.8<small>%</small></span>
+          </div>
+          <div class="mini">
+            <span class="mini-label">Soil pH</span>
+            <span class="mini-value">6.42</span>
+          </div>
+          <div class="mini">
+            <span class="mini-label">Battery</span>
+            <span class="mini-value text-amber-300">87<small>%</small></span>
+          </div>
+        </div>
+        <div class="mt-4 rounded-xl bg-white/[0.03] border border-white/5 p-4">
+          <p class="m-0 mb-3 text-xs text-ink-400">Root zone · last 7 days</p>
+          <svg viewBox="0 0 320 90" class="w-full h-[90px]" preserveAspectRatio="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="hero-fill" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0" stop-color="#1fe0c8" stop-opacity="0.35" />
+                <stop offset="1" stop-color="#1fe0c8" stop-opacity="0" />
+              </linearGradient>
+            </defs>
+            <path d="M0 52 L20 58 L40 40 L60 46 L80 55 L100 34 L120 42 L140 50 L160 30 L180 38 L200 47 L220 26 L240 35 L260 44 L280 24 L300 31 L320 28 L320 90 L0 90 Z" fill="url(#hero-fill)" />
+            <path d="M0 52 L20 58 L40 40 L60 46 L80 55 L100 34 L120 42 L140 50 L160 30 L180 38 L200 47 L220 26 L240 35 L260 44 L280 24 L300 31 L320 28" fill="none" stroke="#1fe0c8" stroke-width="2.2" />
+            <path d="M0 70 L40 66 L80 72 L120 64 L160 69 L200 61 L240 67 L280 60 L320 63" fill="none" stroke="#fbbf24" stroke-width="1.6" stroke-dasharray="4 4" />
+          </svg>
+        </div>
+        <div class="mt-4 flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.03] px-4 py-3">
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-brand-400/15 text-brand-300"><i class="pi pi-sync" aria-hidden="true"></i></span>
+          <div class="flex-1">
+            <p class="m-0 text-sm font-semibold text-white">Irrigation pump</p>
+            <p class="m-0 text-xs text-ink-400">Running · 17.4 L/min</p>
+          </div>
+          <span class="fake-switch" aria-hidden="true"><span></span></span>
+        </div>
+        <div class="alert-chip"><i class="pi pi-exclamation-triangle" aria-hidden="true"></i> pH drifting high in Greenhouse A</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Stats strip ===== -->
+  <section class="border-b border-[var(--border)] bg-[var(--surface)]">
+    <div class="wrap grid grid-cols-2 lg:grid-cols-4">
+      @for (s of stats; track s.label) {
+        <div class="stat">
+          <span class="stat-value num">{{ s.value }}</span>
+          <span class="stat-label">{{ s.label }}</span>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ===== Platform bento ===== -->
+  <section id="platform" class="wrap py-24">
+    <div class="max-w-2xl">
+      <p class="eyebrow">Platform</p>
+      <h2 class="section-title">One console for water, power and nutrients</h2>
+      <p class="section-lead">Each sensor family has its own focused view, and the overview stitches them together so you can read a field in seconds.</p>
+    </div>
+
+    <div class="mt-12 grid gap-5 lg:grid-cols-12">
+      <article class="tile lg:col-span-7 lg:row-span-2 overflow-hidden !p-0 flex flex-col">
+        <img src="assets/images/field-scout.webp" alt="Grower checking readings on a tablet in a maize field" class="h-64 w-full object-cover lg:h-80" loading="lazy" width="1848" height="1000" />
+        <div class="p-7">
+          <span class="tile-icon"><i class="pi pi-cloud" aria-hidden="true"></i></span>
+          <h3 class="tile-title">Irrigation that answers to the soil</h3>
+          <p class="tile-text">See how the root zone responds to every pump run and every shower. Flow, rainfall and moisture share one timeline, and the irrigation log totals each run in litres.</p>
+        </div>
+      </article>
+      <article class="tile lg:col-span-5">
+        <span class="tile-icon tile-icon--amber"><i class="pi pi-bolt" aria-hidden="true"></i></span>
+        <h3 class="tile-title">Power you can plan around</h3>
+        <p class="tile-text">Track the solar charging cycle of each field gateway, overnight battery floor and enclosure heat before a sensor goes dark.</p>
+      </article>
+      <article class="tile lg:col-span-5 relative overflow-hidden">
+        <span class="tile-icon"><i class="pi pi-sparkles" aria-hidden="true"></i></span>
+        <h3 class="tile-title">Nutrients inside the band</h3>
+        <p class="tile-text">pH is plotted against its agronomic target, and an hour-by-day grid shows exactly when the doser ran.</p>
+      </article>
+      <article class="tile tile--dark lg:col-span-12 grid gap-6 md:grid-cols-[1fr_auto] items-center">
+        <div>
+          <h3 class="tile-title !text-white">Alerts with an owner, controls with a role</h3>
+          <p class="tile-text !text-ink-300">Every alert can be acknowledged and stamped with who did it. Only admins can switch devices — viewers get the full picture, read-only.</p>
+        </div>
+        <div class="flex gap-3 flex-wrap">
+          <span class="role-chip"><i class="pi pi-shield" aria-hidden="true"></i> admin · full control</span>
+          <span class="role-chip role-chip--muted"><i class="pi pi-eye" aria-hidden="true"></i> viewer · read-only</span>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ===== How it works ===== -->
+  <section id="how" class="bg-[var(--surface)] border-y border-[var(--border)]">
+    <div class="wrap py-24">
+      <div class="max-w-2xl">
+        <p class="eyebrow">How it works</p>
+        <h2 class="section-title">From probe to decision in four steps</h2>
+      </div>
+      <ol class="steps mt-14">
+        @for (s of steps; track s.title; let i = $index) {
+          <li class="step">
+            <span class="step-num num">{{ i + 1 < 10 ? '0' + (i + 1) : i + 1 }}</span>
+            <span class="step-icon"><i class="pi {{ s.icon }}" aria-hidden="true"></i></span>
+            <h3 class="m-0 mt-5 text-lg font-semibold">{{ s.title }}</h3>
+            <p class="mt-2 mb-0 muted leading-relaxed">{{ s.text }}</p>
+          </li>
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ===== Sensors ===== -->
+  <section id="sensors" class="wrap py-24 grid gap-14 lg:grid-cols-[1fr_1.3fr] items-start">
+    <div class="lg:sticky lg:top-24">
+      <p class="eyebrow">Sensors</p>
+      <h2 class="section-title">Eighteen readings, three families</h2>
+      <p class="section-lead">Every field reports the same set of metrics, so comparing an orchard with a greenhouse is a single click.</p>
+      <img src="assets/images/seedling.webp" alt="Hands holding a seedling with healthy roots" class="mt-8 hidden lg:block w-full max-w-sm aspect-square object-cover rounded-[22px]" loading="lazy" width="1400" height="1400" />
+    </div>
+    <div class="flex flex-col gap-4">
+      @for (f of families; track f.name) {
+        <div class="family">
+          <div class="flex items-center gap-3">
+            <span class="tile-icon !mb-0"><i class="pi {{ f.icon }}" aria-hidden="true"></i></span>
+            <h3 class="m-0 text-lg font-semibold">{{ f.name }}</h3>
+            <span class="ms-auto text-xs muted num">{{ f.metrics.length }} metrics</span>
+          </div>
+          <ul class="mt-4 mb-0 grid gap-2 p-0 list-none sm:grid-cols-2">
+            @for (m of f.metrics; track m) {
+              <li class="flex items-center gap-2 text-sm"><i class="pi pi-check text-[11px] text-[var(--accent)]" aria-hidden="true"></i>{{ m }}</li>
+            }
+          </ul>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section id="faq" class="bg-[var(--surface)] border-y border-[var(--border)]">
+    <div class="wrap py-24 grid gap-10 lg:grid-cols-[1fr_1.6fr]">
+      <div>
+        <p class="eyebrow">FAQ</p>
+        <h2 class="section-title">Good questions</h2>
+      </div>
+      <p-accordion [value]="0">
+        @for (f of faqs; track f.q; let i = $index) {
+          <p-accordion-panel [value]="i">
+            <p-accordion-header>{{ f.q }}</p-accordion-header>
+            <p-accordion-content><p class="m-0 muted leading-relaxed">{{ f.a }}</p></p-accordion-content>
+          </p-accordion-panel>
+        }
+      </p-accordion>
+    </div>
+  </section>
+
+  <!-- ===== CTA ===== -->
+  <section class="wrap py-24">
+    <div class="cta">
+      <div>
+        <h2 class="m-0 text-3xl font-[720] tracking-tight text-white">Walk a field without leaving your desk.</h2>
+        <p class="mt-3 mb-0 text-ink-300">Sign in with a demo account to explore four simulated fields across two farms.</p>
+      </div>
+      <a routerLink="/login" class="btn-amber">Sign in to the demo <i class="pi pi-arrow-right text-sm" aria-hidden="true"></i></a>
+    </div>
+  </section>
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="border-t border-[var(--border)]">
+  <div class="wrap flex flex-col gap-6 py-10 md:flex-row md:items-center">
+    <app-logo [size]="28" />
+    <p class="m-0 text-sm muted md:ms-6 max-w-md">Portfolio demo. No real farms, devices or people are connected — all data is simulated.</p>
+    <nav class="flex gap-5 md:ms-auto" aria-label="Footer">
+      @for (l of links; track l.fragment) {
+        <a routerLink="/" [fragment]="l.fragment" class="text-sm muted no-underline hover:text-[var(--accent)]">{{ l.label }}</a>
+      }
+    </nav>
+  </div>
+  <div class="wrap pb-8 text-xs muted">© {{ year }} AgriSense demo</div>
+</footer>

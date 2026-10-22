@@ -1,0 +1,119 @@
+<ng-template #navTpl>
+  <nav class="flex flex-col gap-1" aria-label="Dashboard">
+    <p class="nav-group">Monitor</p>
+    @for (item of nav; track item.path) {
+      <a
+        class="nav-link"
+        [routerLink]="item.path"
+        routerLinkActive="is-active"
+        [routerLinkActiveOptions]="{ exact: !!item.exact }"
+        #rla="routerLinkActive"
+        [attr.aria-current]="rla.isActive ? 'page' : null"
+      >
+        <i class="pi {{ item.icon }}" aria-hidden="true"></i>
+        <span class="flex-1">{{ item.label }}</span>
+        @if (item.path === '/app/alerts' && data.openAlerts() > 0) {
+          <span class="nav-count num" [attr.aria-label]="data.openAlerts() + ' open alerts'">{{ data.openAlerts() }}</span>
+        }
+      </a>
+    }
+  </nav>
+</ng-template>
+
+<ng-template #accountTpl>
+  <div class="account">
+    <span class="avatar" aria-hidden="true">{{ initials() }}</span>
+    <div class="min-w-0 flex-1">
+      <p class="m-0 text-sm font-semibold text-white truncate">{{ auth.session()?.displayName }}</p>
+      <p class="m-0 text-xs text-ink-300">
+        <i class="pi text-[10px]" [class]="auth.canWrite() ? 'pi-shield' : 'pi-eye'" aria-hidden="true"></i>
+        {{ auth.canWrite() ? 'Admin · full access' : 'Viewer · read-only' }}
+      </p>
+    </div>
+    <button type="button" class="icon-btn" (click)="signOut()" pTooltip="Sign out" aria-label="Sign out">
+      <i class="pi pi-sign-out" aria-hidden="true"></i>
+    </button>
+  </div>
+</ng-template>
+
+<div class="shell">
+  <aside class="sidebar" aria-label="Main navigation">
+    <a routerLink="/app" class="px-2 pb-6 pt-1 block" aria-label="AgriSense overview">
+      <app-logo [inverse]="true" />
+    </a>
+    <ng-container *ngTemplateOutlet="navTpl" />
+    <div class="mt-auto pt-6">
+      <div class="demo-note">
+        <i class="pi pi-database" aria-hidden="true"></i>
+        <span>Demo workspace — readings are simulated from mock data.</span>
+      </div>
+      <ng-container *ngTemplateOutlet="accountTpl" />
+    </div>
+  </aside>
+
+  <p-drawer [visible]="mobileNav()" (visibleChange)="mobileNav.set($event)" position="left" styleClass="!w-[280px] mobile-drawer" [modal]="true">
+    <ng-template #header><app-logo [inverse]="true" /></ng-template>
+    <div class="flex flex-col h-full">
+      <ng-container *ngTemplateOutlet="navTpl" />
+      <div class="mt-auto pt-6"><ng-container *ngTemplateOutlet="accountTpl" /></div>
+    </div>
+  </p-drawer>
+
+  <div class="main">
+    <header class="topbar">
+      <button type="button" class="icon-btn-light menu-btn" (click)="mobileNav.set(true)" aria-label="Open navigation">
+        <i class="pi pi-bars" aria-hidden="true"></i>
+      </button>
+      <div class="min-w-0 flex-1">
+        <p class="m-0 text-xs muted truncate">
+          {{ data.selectedFarm()?.name ?? 'Loading farms…' }}
+          @if (data.selectedFarm()) {
+            · {{ data.selectedFarm()?.region }}
+          }
+        </p>
+        <h1 class="m-0 text-lg font-[680] tracking-tight truncate">{{ heading() }}</h1>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-3">
+        @if (farmsError()) {
+          <p-button label="Retry" icon="pi pi-refresh" size="small" severity="danger" [text]="true" (onClick)="loadFarms()" />
+        }
+        <p-select
+          [options]="fieldGroups()"
+          [group]="true"
+          optionLabel="label"
+          optionValue="value"
+          [ngModel]="data.selectedFieldId()"
+          (ngModelChange)="onField($event)"
+          placeholder="Select field"
+          ariaLabel="Field"
+          styleClass="w-[170px] sm:w-[240px]"
+          appendTo="body"
+        >
+          <ng-template let-group #group>
+            <span class="text-xs font-semibold uppercase tracking-wider muted">{{ group.label }}</span>
+          </ng-template>
+        </p-select>
+        <span class="hidden md:inline-flex items-center gap-1.5 text-xs muted" [title]="'Last refreshed at ' + lastUpdated()">
+          <span class="live-dot" aria-hidden="true"></span> Updated {{ lastUpdated() }}
+        </span>
+        <button
+          type="button"
+          class="icon-btn-light"
+          (click)="theme.toggle()"
+          [attr.aria-label]="theme.dark() ? 'Switch to light mode' : 'Switch to dark mode'"
+          [pTooltip]="theme.dark() ? 'Light mode' : 'Dark mode'"
+          tooltipPosition="bottom"
+        >
+          <i class="pi" [class]="theme.dark() ? 'pi-sun' : 'pi-moon'" aria-hidden="true"></i>
+        </button>
+      </div>
+    </header>
+
+    <main class="content" id="main">
+      <router-outlet />
+    </main>
+  </div>
+</div>
+
+<p-toast position="bottom-right" />

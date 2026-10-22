@@ -1,0 +1,178 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  display: none;
+  flex-direction: column;
+  padding: 20px 14px;
+  background: #0d1219;
+  border-inline-end: 1px solid #1a212c;
+  overflow-y: auto;
+}
+@media (min-width: 1024px) {
+  .sidebar { display: flex; }
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: var(--topbar-h);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-inline: 16px;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+@media (min-width: 640px) {
+  .topbar { padding-inline: 28px; }
+}
+
+.content {
+  width: 100%;
+  max-width: 1440px;
+  margin-inline: auto;
+  padding: 24px 16px 48px;
+}
+@media (min-width: 640px) {
+  .content { padding: 28px 28px 56px; }
+}
+
+:host ::ng-deep .nav-group {
+  margin: 0 0 6px;
+  padding-inline: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #687a92;
+}
+
+:host ::ng-deep .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: #b2bdcb;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.15s, color 0.15s;
+}
+:host ::ng-deep .nav-link:hover {
+  background: #1a212c;
+  color: #fff;
+}
+:host ::ng-deep .nav-link.is-active {
+  background: rgb(31 224 200 / 0.12);
+  color: #53f5dc;
+}
+:host ::ng-deep .nav-count {
+  min-width: 22px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: #fbbf24;
+  color: #1a1203;
+  font-size: 11px;
+  font-weight: 700;
+  text-align: center;
+}
+
+:host ::ng-deep .account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #1a212c;
+}
+:host ::ng-deep .avatar {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: #0b645e;
+  color: #c8fff4;
+  font-size: 13px;
+  font-weight: 700;
+}
+:host ::ng-deep .icon-btn {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #b2bdcb;
+  cursor: pointer;
+}
+:host ::ng-deep .icon-btn:hover {
+  background: #253242;
+  color: #fff;
+}
+
+.demo-note {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px dashed #2b3442;
+  color: #8797ac;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.icon-btn-light {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+.icon-btn-light:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ok) 25%, transparent);
+}
+
+:host ::ng-deep .mobile-drawer.p-drawer {
+  background: #0d1219;
+  border-color: #1a212c;
+  color: #e5ebf2;
+}
+
+@media (min-width: 1024px) {
+  .menu-btn { display: none; }
+}
