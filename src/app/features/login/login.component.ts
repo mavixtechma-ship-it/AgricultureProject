@@ -9,10 +9,11 @@ import { AuthService } from '../../core/auth/auth.service';
 import { safeReturnUrl } from '../../core/auth/auth.guard';
 import { ThemeService } from '../../core/theme/theme.service';
 import { LogoComponent } from '../../shared/ui/logo.component';
+import { MavixCreditComponent } from '../../shared/ui/mavix-credit.component';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, RouterLink, ButtonModule, InputTextModule, PasswordModule, MessageModule, LogoComponent],
+  imports: [ReactiveFormsModule, RouterLink, ButtonModule, InputTextModule, PasswordModule, MessageModule, LogoComponent, MavixCreditComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login.component.html',
 })

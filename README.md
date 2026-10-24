@@ -66,3 +66,14 @@ src/app/
 ```
 
 See `PROJECT_ANALYSIS.md` for the full analysis and transformation notes.
+
+## Developed by Mavix Tech
+
+[![Mavix Tech](docs/mavix-logo.png)](https://mavixtechma-ship-it.github.io/Mavix/)
+
+**Systems · Automation · Graduation Projects**
+
+Custom business systems, workflow automation and complete graduation projects. ASP.NET, Angular, SQL Server.
+Have an idea? Let's build it — <https://mavixtechma-ship-it.github.io/Mavix/>
+
+The owner credit, link and logo paths live in `src/app/core/owner.ts`; the self-hosted logos are in `public/brand/mavix/`.

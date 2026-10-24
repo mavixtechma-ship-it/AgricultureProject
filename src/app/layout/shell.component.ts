@@ -13,7 +13,9 @@ import { filter, map, startWith } from 'rxjs';
 import { AuthService } from '../core/auth/auth.service';
 import { DataService } from '../core/data/data.service';
 import { ThemeService } from '../core/theme/theme.service';
+import { AboutDialogComponent } from '../shared/ui/about-dialog.component';
 import { LogoComponent } from '../shared/ui/logo.component';
+import { MavixCreditComponent } from '../shared/ui/mavix-credit.component';
 import { NgTemplateOutlet } from '@angular/common';
 
 interface NavItem {
@@ -38,6 +40,8 @@ interface NavItem {
     TooltipModule,
     BadgeModule,
     LogoComponent,
+    MavixCreditComponent,
+    AboutDialogComponent,
   ],
   providers: [MessageService],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -51,6 +55,7 @@ export class ShellComponent {
   protected readonly theme = inject(ThemeService);
 
   protected readonly mobileNav = signal(false);
+  protected readonly aboutOpen = signal(false);
   protected readonly farmsError = signal(false);
   protected readonly now = signal(new Date());
 

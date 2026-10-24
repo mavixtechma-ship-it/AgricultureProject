@@ -4,10 +4,11 @@ import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
 import { ThemeService } from '../../core/theme/theme.service';
 import { LogoComponent } from '../../shared/ui/logo.component';
+import { MavixCreditComponent } from '../../shared/ui/mavix-credit.component';
 
 @Component({
   selector: 'app-landing',
-  imports: [RouterLink, ButtonModule, AccordionModule, LogoComponent],
+  imports: [RouterLink, ButtonModule, AccordionModule, LogoComponent, MavixCreditComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css',

@@ -30,6 +30,9 @@
         {{ auth.canWrite() ? 'Admin · full access' : 'Viewer · read-only' }}
       </p>
     </div>
+    <button type="button" class="icon-btn" (click)="aboutOpen.set(true)" pTooltip="About" aria-label="About AgriSense">
+      <i class="pi pi-info-circle" aria-hidden="true"></i>
+    </button>
     <button type="button" class="icon-btn" (click)="signOut()" pTooltip="Sign out" aria-label="Sign out">
       <i class="pi pi-sign-out" aria-hidden="true"></i>
     </button>
@@ -48,6 +51,7 @@
         <span>Demo workspace — readings are simulated from mock data.</span>
       </div>
       <ng-container *ngTemplateOutlet="accountTpl" />
+      <app-mavix-credit variant="badge" />
     </div>
   </aside>
 
@@ -55,7 +59,10 @@
     <ng-template #header><app-logo [inverse]="true" /></ng-template>
     <div class="flex flex-col h-full">
       <ng-container *ngTemplateOutlet="navTpl" />
-      <div class="mt-auto pt-6"><ng-container *ngTemplateOutlet="accountTpl" /></div>
+      <div class="mt-auto pt-6">
+        <ng-container *ngTemplateOutlet="accountTpl" />
+        <app-mavix-credit variant="badge" />
+      </div>
     </div>
   </p-drawer>
 
@@ -117,3 +124,4 @@
 </div>
 
 <p-toast position="bottom-right" />
+<app-about-dialog [(visible)]="aboutOpen" />
